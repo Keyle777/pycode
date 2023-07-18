@@ -1,6 +1,6 @@
 import pymysql
 #添加数据
-conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='Aa,123456', db='test')
+conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='a12598325', db='filemanagement')
 cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
 
 

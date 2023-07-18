@@ -2,10 +2,26 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import bs4
+from datetime import datetime 
+from pymongo.mongo_client import MongoClient
+import schedule
+import time
+
+uri = "mongodb+srv://root:Xingmimi221...@cluster0.ri0h7iy.mongodb.net/?retryWrites=true&w=majority"
+# 创建连接
+client = MongoClient(uri)
+
+try:
+    # 读取库
+    db = client.weibo
+    # 读取集合
+    collection = db.hot
+    # 删除所有数据
+    x = collection.delete_many({})       
+except Exception as e:
+    print(e)
 
 url = "https://s.weibo.com/top/summary?cate=realtimehot"
-
-
 def getHTMLText(url):
     try:
         kv = {
@@ -19,17 +35,32 @@ def getHTMLText(url):
     except:
         return "error"
 
+def returnDataForWeiboHot():
+    # 删除所有数据
+    x = collection.delete_many({})       
+    html = getHTMLText(url)
+    # print(html)
+    soup = BeautifulSoup(html, 'html.parser')
+    sou = soup.find_all("td", class_='td-02')
+    allInfo = []
+    now = datetime.now()  # 获取当前时间
+    formatted_time = now.strftime("%Y年%m月%d日 %H时")  # 格式化时间为指定字符串格式
+    for x in sou:
+        post = {
+        "title": x.a.string,
+        "date": formatted_time}
+        collection.insert_one(post).inserted_id
+        print(x.a.string)
+        allInfo.append(x.a.string)
+    df = pd.DataFrame(allInfo)
+    df.columns = ['热搜标题']
+    df.to_csv('data.csv', encoding='utf_8_sig')
 
-html = getHTMLText(url)
-# print(html)
-soup = BeautifulSoup(html, 'html.parser')
-sou = soup.find_all("td", class_='td-02')
-print(len(sou))
-allInfo = []
-for x in sou:
-    print(x.a.string)
-    allInfo.append(x.a.string)
-df = pd.DataFrame(allInfo)
-df.columns = ['热搜标题']
-df.to_csv('data.csv', encoding='utf_8_sig')
+# 在整点执行任务
+schedule.every().hour.at(":00").do(returnDataForWeiboHot)
+
+# 运行任务
+while True:
+    schedule.run_pending()
+    time.sleep(1)
 

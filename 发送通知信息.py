@@ -1,6 +1,5 @@
 import time
-
-import pymysql
+from pymongo.mongo_client import MongoClient
 import requests, json
 from bs4 import BeautifulSoup
 
@@ -11,18 +10,28 @@ config = {
 }
 
 def coon():
-    # db = pymysql.connect(host="localhost", user="root", password="137928", database="BJCX", port=3306)
-    cursor = db.cursor(cursor=pymysql.cursors.DictCursor)
-    return cursor
-
+    uri = "mongodb+srv://root:Xingmimi221...@cluster0.ri0h7iy.mongodb.net/?retryWrites=true&w=majority"
+    # 创建连接
+    client = MongoClient(uri)
+    return client
 
 cursor = coon()
+try:
+    # 读取库
+    db = cursor.user
+    # 读取集合
+    collection = db.user
+    # 删除所有数据
+    x = collection.delete_many({})       
+except Exception as e:
+    print(e)
 
 
 host = 'https://api.weixin.qq.com/cgi-bin'
 url = host + '/token?grant_type=client_credential&appid={appid}&secret={secret}'.format(
     appid=config['appid'], secret=config['secret'])
 response = requests.post(url).content.decode('utf-8')
+print(json.loads(response))
 access_token = json.loads(response)['access_token']  # 获取token
 # 请求发送消息接口
 
@@ -68,13 +77,14 @@ def sendMessage(openId,nickName):
     response = requests.post(url, json=data).content.decode('utf-8')
     print(json.loads(response),'------------------------>',nickName)
 
+
 #查询数据库openId
-sql = f"SELECT * FROM USER"
-try:
-    cursor.execute(sql)
-except:
-    cursor = coon()
-    cursor.execute(sql)
-res = cursor.fetchall()
-for i in res:
-    sendMessage(i['OPENID'],i['nickName'])
+
+# 查询所有文档
+results = collection.find()
+
+# 遍历结果
+for result in results:
+    print(result)
+
+

@@ -17,7 +17,7 @@ headers = {
     'sec-fetch-site': 'same-origin',
     'upgrade-insecure-requests': '1',
 }
-baseUrl = 'http://localhost:3000/'
+baseUrl = 'https://music.163.com/'
 allInfo = []
 res = requests.get(baseUrl + 'playlist/track/all?id=3778678&limit=200&offset=1').content.decode('utf-8')
 data = json.loads(res)['songs']

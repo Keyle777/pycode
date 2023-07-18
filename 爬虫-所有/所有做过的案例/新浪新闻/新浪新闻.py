@@ -11,8 +11,8 @@ headers = {
 
 def getItemInfo(url):
     try:
-        response = requests.get(url, headers=headers).content.decode('utf-8')
-        # print(response)
+        response = requests.get(url, headers=headers, verify=False).content.decode('utf-8')
+        print(response)
         print(len(response))
         soup = BeautifulSoup(response, "lxml")
         title = soup.select('.main-title')[0].string

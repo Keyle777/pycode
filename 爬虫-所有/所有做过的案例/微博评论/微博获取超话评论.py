@@ -24,7 +24,7 @@ headers_cn = {
 }
 
 baseUrl = 'https://s.weibo.com/weibo?q={}&Refer=index'
-topic = '郑州暴雨'
+topic = '已读不回是不是冷暴力'
 csvfile = open(topic + '.csv', 'a', newline='', encoding='utf-8-sig')
 writer = csv.writer(csvfile)
 
@@ -43,6 +43,7 @@ def getTopic(url):
         response = requests.get(tempUrl, headers=headers_com)
         html = etree.HTML(response.text, parser=etree.HTMLParser(encoding='utf-8'))
         count = len(html.xpath('//div[@class="card-wrap"]')) - 2
+        print(count)
         for i in range(1, count + 1):
             try:
                 contents = html.xpath('//div[@class="card-wrap"][' + str(
@@ -286,7 +287,7 @@ def findUrl(hosturl):
 
 
 if __name__ == '__main__':
-    topic = '#郑州暴雨#'
+    topic = '#已读不回属于社交默契还是冷暴力#'
     url = baseUrl.format(quote(topic))
     print(url)
     writer.writerow(['类别', '用户名', '用户链接', '性别', '地区', '微博数', '关注数', '粉丝数', '评论内容', '评论时间', '点赞次数'])

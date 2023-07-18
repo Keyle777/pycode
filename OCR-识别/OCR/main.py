@@ -44,7 +44,7 @@ def identity_OCR(pic_path):
     img1=Image.open(pic_path)
     w,h=img1.size
     #将身份证放大3倍
-    out=img1.resize((w*3,h*3),Image.ANTIALIAS)
+    out=img1.resize((w*3,h*3))
     Image._show(out)
     cv2.waitKey(0)
     region = (125*3,200*3,370*3,250*3)
@@ -100,8 +100,8 @@ def identity_OCR_Video(pic_path):
             print('异常')
         # time.sleep(2)
 if __name__ == '__main__':
-    pic_path="./zsx2.jpg"
-    # identity_OCR(pic_path)  ##使用图片2 识别证件号
+    pic_path=r"OCR-识别\OCR\1.jpg"
+    identity_OCR(pic_path)  ##使用图片2 识别证件号
     identity_OCR_Video(0)  #调用摄像头
     # identity_OCR_Chine(pic_path) #中文识别
     # identity_OCR_Nopro(pic_path) #英文识别
