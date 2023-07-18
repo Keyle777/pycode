@@ -1,40 +1,28 @@
+
 import pytesseract
 from PIL import Image
+from PIL import ImageGrab
+import time
 
 
-def clear_image(image):
-    image = image.convert('RGB')
-    width = image.size[0]
-    height = image.size[1]
-    noise_color = get_noise_color(image)
+# 指定截图区域的中心坐标和宽度、高度
+center_x = 938
+center_y = 605
+width = 330
+height = 50
 
-    for x in range(width):
-        for y in range(height):
-            # 清除边框和干扰色
-            rgb = image.getpixel((x, y))
-            if (x == 0 or y == 0 or x == width - 1 or y == height - 1
-                    or rgb == noise_color or rgb[1] > 100):
-                image.putpixel((x, y), (255, 255, 255))
-    return image
+# 计算截图区域的左上角和右下角坐标
+left = center_x - width // 2
+top = center_y - height // 2
+right = center_x + width // 2
+bottom = center_y + height // 2
 
+time.sleep(5)
+# 截取屏幕指定区域的截图
+im = ImageGrab.grab(bbox=(left, top, right, bottom))
 
-def get_noise_color(image):
-    for y in range(1, image.size[1] - 1):
-        # 获取第2列非白的颜色
-        (r, g, b) = image.getpixel((2, y))
-        if r < 255 and g < 255 and b < 255:
-            return (r, g, b)
+# 保存截图为PNG格式的图片文件
+im.save("screenshot.png")
 
-
-image = Image.open('./yzm.png')
-print(image)
-image = clear_image(image)
-# 转化为灰度图
-imgry = image.convert('L')
-pytesseract.pytesseract.tesseract_cmd = 'D:/photoSee/Tesseract-OCR/tesseract.exe'
-code = pytesseract.image_to_string(imgry)
-
-imgry.save("imgry1.png")
-with open("code.txt", "w") as f:
-    print(code)
-    f.write(str(code))
+text = pytesseract.image_to_string(Image.open("D:\\pycode\screenshot.png"),lang="eng")
+print(text)

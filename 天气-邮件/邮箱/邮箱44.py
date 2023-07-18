@@ -1,7 +1,7 @@
 import imaplib, email, os
 imapserver = 'imap.qq.com'
-emailuser = "2410047096@qq.com"
-emailpasswd = "ifjtgcemwocqdiii"
+emailuser = "1059819521@qq.com"
+emailpasswd = "vwknsxlvdaevbdgd"
 attachementdir = r"d:\a"  # 附件存放的位置
 conn = imaplib.IMAP4_SSL(imapserver)
 conn.login(emailuser, emailpasswd)

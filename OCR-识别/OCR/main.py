@@ -1,8 +1,6 @@
 
 import sys
-# import importlib
-# importlib.reload(sys)
-# sys.setdefaultencoding('utf-8')
+
 import time
 time1 = time.time()
 from PIL import Image
@@ -100,7 +98,7 @@ def identity_OCR_Video(pic_path):
             print('异常')
         # time.sleep(2)
 if __name__ == '__main__':
-    pic_path=r"OCR-识别\OCR\1.jpg"
+    pic_path=r"screenshot.png"
     identity_OCR(pic_path)  ##使用图片2 识别证件号
     identity_OCR_Video(0)  #调用摄像头
     # identity_OCR_Chine(pic_path) #中文识别
